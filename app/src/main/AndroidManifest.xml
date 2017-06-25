@@ -6,7 +6,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/dsb_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -16,21 +16,23 @@
             android:name=".ExpressCenterActivity"
             android:label="主页"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ReleaseInfoActivity" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".StationExpressDetailActivity" />
+        <activity android:name=".WelcomeActivity" android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StationExpressDetailActivity" />
-        <activity android:name=".MyPackageActivity"></activity>
+        <activity android:name=".ReleaseExpressInfo"/>
     </application>
 
 </manifest>

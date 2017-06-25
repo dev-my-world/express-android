@@ -23,7 +23,7 @@ import java.util.concurrent.FutureTask;
 public class HttpUtil {
     //创建Http对象
     public static HttpClient httpClient = new DefaultHttpClient();
-    public static final String BASE_URL = "http://192.168.31.58:8088/android/";
+    public static final String BASE_URL = "http://124.133.66.210:8088/android/";
 
     /**
      * @param url 发送请求的url

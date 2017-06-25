@@ -1,10 +1,13 @@
 package com.example.android.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -35,6 +38,14 @@ public class LoginActivity extends AppCompatActivity {
 
         editPassword = loginBinding.editPassword;
 
+        loginBinding.skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         loginBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -87,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
 
             jsonObject = query(userName, passWord);
-            if (jsonObject.getInt("userId") > 0) {
+            if (jsonObject.getInt("userId") >= 0) {
                 return true;
             }
 
@@ -96,20 +108,49 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // TODO: 2017/6/20
-        return true;
+        return false;
     }
 
 
     private JSONObject query(String userName, String passWord) {
         Map<String, String> map = new HashMap<>();
-        map.put("user", userName);
-        map.put("pass", passWord);
-        String url = HttpUtil.BASE_URL + "login.jsp";
+        map.put("phoneNumber", userName);
+        map.put("passWord", passWord);
+        String url = HttpUtil.BASE_URL + "login";
         try {
             return new JSONObject(HttpUtil.postRequest(url, map));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 创建退出对话框
+            AlertDialog isExit = new AlertDialog.Builder(this).create();
+            // 设置对话框标题
+            isExit.setTitle("系统提示");
+            // 设置对话框消息
+            isExit.setMessage("确定要退出吗");
+            // 添加选择按钮并注册监听
+            isExit.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            isExit.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            // 显示对话框
+            isExit.show();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

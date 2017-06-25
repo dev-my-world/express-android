@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -71,6 +71,12 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
         </LinearLayout>
+
+        <Spinner
+            android:id="@+id/collage_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/support_simple_spinner_dropdown_item"/>
 
 
         <LinearLayout

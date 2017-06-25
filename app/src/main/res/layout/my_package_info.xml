@@ -15,7 +15,7 @@
             android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
 
-        <include layout="@layout/express_item">
+        <include layout="@layout/simple_express_item">
 
         </include>
 

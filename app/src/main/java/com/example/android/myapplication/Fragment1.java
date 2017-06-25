@@ -1,21 +1,21 @@
 package com.example.android.myapplication;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.example.android.client.util.HttpUtil;
-import com.example.android.myapplication.databinding.ActivityExpressCenterBinding;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,23 +25,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExpressCenterActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+/**
+ * Created by zhang on 2017/6/25.
+ */
 
+public class Fragment1 extends Fragment implements AdapterView.OnItemClickListener {
 
-    private String[] stations = {"菜鸟驿站", "I DO()", "联通复印店", "地瓜坊", "青春修炼营"};
+    private String[] stations = {"菜鸟驿站", "I DO(___)", "联通复印店", "地瓜坊", "青春修炼营"};
 
     private int[] bgp = {R.drawable.ems_logo, R.drawable.shunfeng_logo, R.drawable.shentong_logo};
     private ImageView banner;
     private Handler handler;
 
+    @Nullable
     @Override
-
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        super.onCreate(savedInstanceState);
-        ActivityExpressCenterBinding expressCenterBinding = DataBindingUtil.setContentView(this, R.layout.activity_express_center);
-        ListView listView = expressCenterBinding.listItem;
+
+        View rootView = inflater.inflate(R.layout.activity_express_center, container, false);
+
+        ListView listView = (ListView) rootView.findViewById(R.id.list_item);
+
 
         List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
         try {
@@ -63,12 +68,13 @@ public class ExpressCenterActivity extends AppCompatActivity implements AdapterV
             e.printStackTrace();
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, itemList, R.layout.express_station_item_list, new String[]{"station", "count"},
+        SimpleAdapter simpleAdapter = new SimpleAdapter(getContext(), itemList, R.layout.express_station_item_list, new String[]{"station", "count"},
                 new int[]{R.id.station, R.id.package_count});
 
         listView.setAdapter(simpleAdapter);
-        banner = expressCenterBinding.banner;
+        banner = (ImageView) rootView.findViewById(R.id.banner);
         listView.setOnItemClickListener(this);
+
         handler = new Handler();
 
         handler.postAtTime(new Runnable() {
@@ -77,16 +83,15 @@ public class ExpressCenterActivity extends AppCompatActivity implements AdapterV
                 banner.setImageResource(bgp[(int) Math.floor(Math.random() * 3)]);
             }
         }, 1000);
+        return rootView;
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        Intent intent = new Intent(ExpressCenterActivity.this, StationExpressDetailActivity.class);
-        Toast.makeText(this, "position:" + position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), StationExpressDetailActivity.class);
         intent.putExtra("station", (position + 1) + "");
         startActivity(intent);
     }
-
 
     private List<String> stationExpressCountList() throws Exception {
         List<String> stationExpressCountList = new ArrayList<>();
@@ -118,6 +123,3 @@ public class ExpressCenterActivity extends AppCompatActivity implements AdapterV
 
 
 }
-
-
-
