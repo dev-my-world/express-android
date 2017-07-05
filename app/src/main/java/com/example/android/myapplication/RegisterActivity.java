@@ -7,10 +7,8 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.client.util.DialogUtil;
@@ -23,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-    private String[] collages = {"山东凯文科技职业学院"};
     private Button register;
     private String passWord;
     private String password2;
@@ -31,6 +28,16 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editPhoneNum;
     private EditText editPassword;
     private EditText editPassword2;
+    private EditText editName;
+    private JSONObject jsonObject;
+
+    public JSONObject getJsonObject() {
+        return jsonObject;
+    }
+
+    public void setJsonObject(JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         ActivityRegisterBinding registerBinding = DataBindingUtil.setContentView(this, R.layout.activity_register);
-
-        Spinner collageSelect = registerBinding.collageSelect;
 
         editPhoneNum = registerBinding.editPhoneNum;
 
@@ -76,10 +81,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.simple_spinner_dropdown_item, collages);
-
-        collageSelect.setAdapter(arrayAdapter);
 
 
     }
@@ -118,10 +119,9 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean registerPro() {
         String phoneNumber = editPhoneNum.getText().toString();
         String passWord = editPassword.getText().toString();
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject;
         try {
             jsonObject = query(phoneNumber, passWord);
-            ;
             if (jsonObject.getString("register").equals("1")) {
                 return true;
             }
@@ -130,23 +130,20 @@ public class RegisterActivity extends AppCompatActivity {
             DialogUtil.showDialog(this, "服务器响应异常，请稍后再试", false);
             e.printStackTrace();
         }
-        // TODO: 2017/6/20
         return false;
     }
 
     private JSONObject query(String phoneNumber, String password) {
         Map<String, String> map = new HashMap<>();
+        String url = HttpUtil.BASE_URL + "register";
         map.put("phoneNumber", phoneNumber);
         map.put("passWord", password);
-        String url = HttpUtil.BASE_URL + "register";
-
         try {
-
             return new JSONObject(HttpUtil.postRequest(url, map));
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 }

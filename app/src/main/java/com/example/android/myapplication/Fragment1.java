@@ -2,20 +2,22 @@ package com.example.android.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.example.android.client.util.HttpUtil;
+import com.example.android.client.util.StationNames;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,13 +31,21 @@ import java.util.Map;
  * Created by zhang on 2017/6/25.
  */
 
-public class Fragment1 extends Fragment implements AdapterView.OnItemClickListener {
+public class Fragment1 extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
-    private String[] stations = {"菜鸟驿站", "I DO(___)", "联通复印店", "地瓜坊", "青春修炼营"};
+    private String[] stations = {"菜鸟驿站", "I DO", "联通复印店", "地瓜坊", "青春修炼营"};
 
-    private int[] bgp = {R.drawable.ems_logo, R.drawable.shunfeng_logo, R.drawable.shentong_logo};
-    private ImageView banner;
-    private Handler handler;
+
+    private Button mMessageBtn;
+
+
+    private LinearLayout stationLayout;
+    private LinearLayout notCollectedLayout;
+    private SimpleAdapter simpleAdapter;
+    private ListView listView;
+
+
+
 
     @Nullable
     @Override
@@ -43,83 +53,111 @@ public class Fragment1 extends Fragment implements AdapterView.OnItemClickListen
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        View rootView = inflater.inflate(R.layout.activity_express_center, container, false);
+        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.list_item);
+        stationLayout = (LinearLayout) rootView.findViewById(R.id.station_layout);
+        notCollectedLayout = (LinearLayout) rootView.findViewById(R.id.not_collected_layout);
+
+        stationLayout.setOnClickListener(this);
+        notCollectedLayout.setOnClickListener(this);
 
 
-        List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
-        try {
-            List<String> list = stationExpressCountList();
+        listView = (ListView) rootView.findViewById(R.id.list_item);
 
-            Log.i("tag", list.get(0));
+        simpleAdapter = new SimpleAdapter(getContext(), getData(), R.layout.express_station_item_list, new String[]{"station", "count"},
+                new int[]{R.id.station, R.id.package_count});
 
-            for (int i = 0; i < 5; i++) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("station", stations[i]);
-                if (list.get(i) == null) {
-                    map.put("count", 0);
-                } else
-                    map.put("count", list.get(i));
-                itemList.add(map);
+        listView.setAdapter(simpleAdapter);
+
+        mMessageBtn = (Button) rootView.findViewById(R.id.message);
+
+        mMessageBtn.setVisibility(View.VISIBLE);
+
+        mMessageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "暂时没有更多消息", Toast.LENGTH_SHORT).show();
             }
+        });
 
+        listView.setOnItemClickListener(this);
+        return rootView;
+    }
+
+    private List<Map<String, Object>> getData() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        try {
+            String url = HttpUtil.BASE_URL + "stationExpressCount";
+            String stationExpressCount = HttpUtil.getRequest(url);
+            JSONArray jsonArray = new JSONArray(stationExpressCount);
+            JSONObject jsonObject;
+            for (int j = 0; j < jsonArray.length(); j++) {
+                Map<String, Object> map = new HashMap<>();
+                jsonObject = jsonArray.getJSONObject(j);
+                map.put("count", jsonObject.getInt("count"));
+                map.put("station", StationNames.getStationName(jsonObject.getInt("station")));
+                list.add(map);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(getContext(), itemList, R.layout.express_station_item_list, new String[]{"station", "count"},
-                new int[]{R.id.station, R.id.package_count});
-
-        listView.setAdapter(simpleAdapter);
-        banner = (ImageView) rootView.findViewById(R.id.banner);
-        listView.setOnItemClickListener(this);
-
-        handler = new Handler();
-
-        handler.postAtTime(new Runnable() {
-            @Override
-            public void run() {
-                banner.setImageResource(bgp[(int) Math.floor(Math.random() * 3)]);
-            }
-        }, 1000);
-        return rootView;
+        return list;
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         Intent intent = new Intent(getContext(), StationExpressDetailActivity.class);
-        intent.putExtra("station", (position + 1) + "");
+        intent.putExtra("station", position);
+        intent.putExtra("userId", getActivity().getIntent().getIntExtra("userId", -1));
         startActivity(intent);
     }
 
-    private List<String> stationExpressCountList() throws Exception {
-        List<String> stationExpressCountList = new ArrayList<>();
-        int[] count = new int[5];
-        String url = HttpUtil.BASE_URL + "allExpress";
-        JSONArray jsonArray = new JSONArray(HttpUtil.getRequest(url));
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject o = jsonArray.getJSONObject(i);
-            String station = o.getString("station");
-            if ("1".equals(station)) {
-                count[0] += 1;
-            } else if ("2".equals(station)) {
-                count[1] += 1;
-            } else if ("3".equals(station)) {
-                count[2] += 1;
-            } else if ("4".equals(station)) {
-                count[3] += 1;
-            } else
-                count[4] += 1;
-        }
 
-        for (int i : count
-                ) {
-            stationExpressCountList.add("" + i);
-        }
+    @Override
+    public void onClick(View view) {
+        Toast toast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
+        switch (view.getId()) {
+            case R.id.station_layout:
+                toast.setText("这里是站点");
+                toast.show();
+                break;
 
-        return stationExpressCountList;
+            case R.id.not_collected_layout:
+                toast.setText("这里是未代收");
+                toast.show();
+                break;
+        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        simpleAdapter = new SimpleAdapter(getContext(), getData(), R.layout.express_station_item_list, new String[]{"station", "count"},
+                new int[]{R.id.station, R.id.package_count});
 
+        listView.setAdapter(simpleAdapter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        simpleAdapter = new SimpleAdapter(getContext(), getData(), R.layout.express_station_item_list, new String[]{"station", "count"},
+                new int[]{R.id.station, R.id.package_count});
+
+        listView.setAdapter(simpleAdapter);
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (enter) {
+            simpleAdapter = new SimpleAdapter(getContext(), getData(), R.layout.express_station_item_list, new String[]{"station", "count"},
+                    new int[]{R.id.station, R.id.package_count});
+
+            listView.setAdapter(simpleAdapter);
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim);
+
+    }
 }

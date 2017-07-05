@@ -1,5 +1,6 @@
 package com.example.android.myapplication;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,18 +8,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener{
 
     private Button mHomeBtn;
     private Button mTaskBtn;
     private Button mDiscoveryBtn;
     private Button mPersonalBtn;
+
+
+    private ImageView mIvHome;
+    private ImageView mIvTask;
+    private ImageView mIvDiscovery;
+    private ImageView mIvPersonal;
 
 
     private Fragment mFragment1;
@@ -39,6 +48,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +59,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initEvent();
     }
 
+
     private void initEvent() {
         mHomeBtn.setOnClickListener(this);
         mDiscoveryBtn.setOnClickListener(this);
         mTaskBtn.setOnClickListener(this);
         mPersonalBtn.setOnClickListener(this);
 
+        mIvHome.setOnClickListener(this);
+        mIvTask.setOnClickListener(this);
+        mIvDiscovery.setOnClickListener(this);
+        mIvPersonal.setOnClickListener(this);
     }
 
     private void initView() {
@@ -62,6 +77,60 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTaskBtn = (Button) findViewById(R.id.task_btn);
         mDiscoveryBtn = (Button) findViewById(R.id.discovery_btn);
         mPersonalBtn = (Button) findViewById(R.id.personal_btn);
+
+
+        mIvHome = (ImageView) findViewById(R.id.iv_home);
+        mIvTask = (ImageView) findViewById(R.id.iv_task);
+        mIvDiscovery = (ImageView) findViewById(R.id.iv_discovery);
+        mIvPersonal = (ImageView) findViewById(R.id.iv_personal);
+
+
+    }
+
+
+    private void setBtnTextColor(int select) {
+        switch (select) {
+            case 1:
+                mHomeBtn.setTextColor(Color.rgb(0, 204, 255));
+                mTaskBtn.setTextColor(Color.DKGRAY);
+                mDiscoveryBtn.setTextColor(Color.DKGRAY);
+                mPersonalBtn.setTextColor(Color.DKGRAY);
+                mIvHome.setImageResource(R.drawable.home1);
+                mIvTask.setImageResource(R.drawable.public2);
+                mIvDiscovery.setImageResource(R.drawable.discovery2);
+                mIvPersonal.setImageResource(R.drawable.person2);
+                break;
+            case 2:
+                mTaskBtn.setTextColor(Color.rgb(0, 204, 255));
+                mHomeBtn.setTextColor(Color.DKGRAY);
+                mDiscoveryBtn.setTextColor(Color.DKGRAY);
+                mPersonalBtn.setTextColor(Color.DKGRAY);
+                mIvHome.setImageResource(R.drawable.home2);
+                mIvTask.setImageResource(R.drawable.public1);
+                mIvDiscovery.setImageResource(R.drawable.discovery2);
+                mIvPersonal.setImageResource(R.drawable.person2);
+                break;
+            case 3:
+                mDiscoveryBtn.setTextColor(Color.rgb(0, 204, 255));
+                mTaskBtn.setTextColor(Color.DKGRAY);
+                mHomeBtn.setTextColor(Color.DKGRAY);
+                mPersonalBtn.setTextColor(Color.DKGRAY);
+                mIvHome.setImageResource(R.drawable.home2);
+                mIvTask.setImageResource(R.drawable.public2);
+                mIvDiscovery.setImageResource(R.drawable.discovery1);
+                mIvPersonal.setImageResource(R.drawable.person2);
+                break;
+            case 4:
+                mPersonalBtn.setTextColor(Color.rgb(0, 204, 255));
+                mTaskBtn.setTextColor(Color.DKGRAY);
+                mDiscoveryBtn.setTextColor(Color.DKGRAY);
+                mHomeBtn.setTextColor(Color.DKGRAY);
+                mIvHome.setImageResource(R.drawable.home2);
+                mIvTask.setImageResource(R.drawable.public2);
+                mIvDiscovery.setImageResource(R.drawable.discovery2);
+                mIvPersonal.setImageResource(R.drawable.person1);
+                break;
+        }
     }
 
 
@@ -71,30 +140,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         hideFragment(transaction);
         switch (i) {
             case 0:
+                setBtnTextColor(1);
                 if (mFragment1 == null) {
                     mFragment1 = new Fragment1();
+
                     transaction.add(R.id.id_content, mFragment1);
                 } else {
                     transaction.show(mFragment1);
                 }
                 break;
             case 1:
+                setBtnTextColor(2);
                 if (mFragment2 == null) {
                     mFragment2 = new Fragment2();
+
                     transaction.add(R.id.id_content, mFragment2);
                 } else {
                     transaction.show(mFragment2);
                 }
                 break;
             case 2:
+                setBtnTextColor(3);
                 if (mFragment3 == null) {
                     mFragment3 = new Fragment3();
+
                     transaction.add(R.id.id_content, mFragment3);
                 } else {
                     transaction.show(mFragment3);
                 }
                 break;
             case 3:
+                setBtnTextColor(4);
                 if (mFragment4 == null) {
                     mFragment4 = new Fragment4();
                     transaction.add(R.id.id_content, mFragment4);
@@ -150,19 +226,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+
+
         switch (view.getId()) {
             case R.id.home_btn:
+                setSelect(0);
+                break;
+            case R.id.iv_home:
                 setSelect(0);
                 break;
             case R.id.task_btn:
                 setSelect(1);
                 break;
+            case R.id.iv_task:
+                setSelect(1);
+                break;
             case R.id.discovery_btn:
                 setSelect(2);
                 break;
+            case R.id.iv_discovery:
+                setSelect(2);
+                break;
+
             case R.id.personal_btn:
                 setSelect(3);
                 break;
+            case R.id.iv_personal:
+                setSelect(3);
+                break;
+
         }
     }
+
+
 }

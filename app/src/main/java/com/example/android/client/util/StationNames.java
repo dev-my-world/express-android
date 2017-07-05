@@ -5,7 +5,7 @@ package com.example.android.client.util;
  */
 
 public class StationNames {
-    private static String[] stations = {"菜鸟驿站", "I DO(___)", "联通复印店", "地瓜坊", "青春修炼营"};
+    private static String[] stations = {"菜鸟驿站", "I DO", "联通复印店", "地瓜坊", "青春修炼营"};
 
     public static String getStationName(int id) {
         return stations[id];
