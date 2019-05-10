@@ -4,12 +4,25 @@
 
    ## App 主界面分为"主页","代收","发现","个人"
    ### 在主页中我们可以发现和浏览可以代收的快递
-   ![](images/home.png)
+   <center>
+      <img src="images/home.png" width="50%"></img>
+   </center>
+
    ### 在代收中可以发布我们的代收
-   ![](images/agent.png)
+   
+   <center>
+      <img src="images/agent.png" width="50%"></img>
+   </center>
+
    ### 发现中可以浏览京东超市,营养配餐,海外购
-   ![](images/discovery.png)
+
+   <center>
+      <img src="images/discovery.png" width="50%"></img>
+   </center>
+
    ### 在个人中可以查看自己帮别人代收的快递以及自己发布的代收快递情况
-   ![](images/personal.png)
+   <center>
+      <img src="images/personal.png" width="50%"></img>
+   </center>
 
 
