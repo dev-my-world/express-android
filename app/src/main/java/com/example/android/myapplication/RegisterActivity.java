@@ -21,10 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-    private Button register;
-    private String passWord;
-    private String password2;
-    private String phoneNum;
     private EditText editPhoneNum;
     private EditText editPassword;
     private EditText editPassword2;
@@ -55,28 +51,25 @@ public class RegisterActivity extends AppCompatActivity {
         editPassword2 = registerBinding.editPassword2;
 
 
-        register = registerBinding.register;
+        Button register = registerBinding.register;
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validate()) {
-                    if (registerPro()) {
-                        {
-                            final Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        register.setOnClickListener(view -> {
+            if (validate()) {
+                if (registerPro()) {
+                    {
+                        final Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
 
-                            Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }, 500);
+                        Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 500);
 
 
-                        }
                     }
                 }
             }
@@ -87,10 +80,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private boolean validate() {
-        passWord = editPassword.getText().toString();
-        password2 = editPassword2.getText().toString();
-        phoneNum = editPhoneNum.getText().toString();
-        if (password2.length() > 0 || password2.length() > 0) {
+        String passWord = editPassword.getText().toString();
+        String password2 = editPassword2.getText().toString();
+        String phoneNum = editPhoneNum.getText().toString();
+        if (passWord.length() > 0 || password2.length() > 0) {
             if (!passWord.equals(password2)) {
                 DialogUtil.showDialog(this, "两次密码输入不一致", false);
                 return false;

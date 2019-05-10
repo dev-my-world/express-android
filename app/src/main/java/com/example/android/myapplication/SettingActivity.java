@@ -46,7 +46,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        mTvMessage = (TextView) findViewById(R.id.message);
+        mTvMessage = findViewById(R.id.message);
         mTvTitle = (TextView) findViewById(R.id.title);
         mBtnBack = (ImageButton) findViewById(R.id.back_btn);
     }

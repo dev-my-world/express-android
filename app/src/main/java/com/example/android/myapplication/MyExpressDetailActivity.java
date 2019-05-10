@@ -67,7 +67,7 @@ public class MyExpressDetailActivity extends AppCompatActivity implements OnClic
             String message = jsonObject.getString("message");
             String remark = jsonObject.getString("remark");
             String address = jsonObject.getString("address");
-            Integer station = jsonObject.getInt("station");
+            int station = jsonObject.getInt("station");
             String phone = jsonObject.getString("phone");
 
             int weight = jsonObject.getInt("weight");
@@ -84,21 +84,21 @@ public class MyExpressDetailActivity extends AppCompatActivity implements OnClic
     }
 
     private void initView() {
-        tv_name = (TextView) findViewById(R.id.tv_name);
-        tv_express = (TextView) findViewById(R.id.tv_express);
-        tv_station = (TextView) findViewById(R.id.tv_station);
-        tv_phone = (TextView) findViewById(R.id.tv_phone);
-        tv_message = (TextView) findViewById(R.id.tv_message_content);
-        tv_real_name = (TextView) findViewById(R.id.tv_real_name);
-        tv_real_phone = (TextView) findViewById(R.id.tv_real_phone);
-        tv_address = (TextView) findViewById(R.id.tv_address);
-        tv_remark = (TextView) findViewById(R.id.tv_remark);
-        confirm_btn = (Button) findViewById(R.id.confirm_btn);
+        tv_name = findViewById(R.id.tv_name);
+        tv_express = findViewById(R.id.tv_express);
+        tv_station = findViewById(R.id.tv_station);
+        tv_phone = findViewById(R.id.tv_phone);
+        tv_message = findViewById(R.id.tv_message_content);
+        tv_real_name = findViewById(R.id.tv_real_name);
+        tv_real_phone = findViewById(R.id.tv_real_phone);
+        tv_address = findViewById(R.id.tv_address);
+        tv_remark = findViewById(R.id.tv_remark);
+        confirm_btn = findViewById(R.id.confirm_btn);
 
-        back_btn = (ImageButton) findViewById(R.id.back_btn);
+        back_btn = findViewById(R.id.back_btn);
         back_btn.setVisibility(View.VISIBLE);
 
-        title = (TextView) findViewById(R.id.title);
+        title = findViewById(R.id.title);
         title.setText("快件详情");
 
 
